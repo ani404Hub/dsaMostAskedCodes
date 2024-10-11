@@ -1,7 +1,10 @@
 package org.example;
 
 import java.util.*;
-
+/*
+Question asked in JPMC,
+Print set of 3 integers that are consecutive in nature
+ */
 public class JPMC {
     public static void main(String[] args) {
         List<Object> objectList = Arrays.asList(1, 2, 3, 4, '@', 5, 9, 'a', 6, 7, 8, 4, -8, -7, -3, -2, -1);
@@ -10,7 +13,7 @@ public class JPMC {
         int cur,prev = 0;
         for(Object i : objectList){
             if(i instanceof Integer){
-                if(continueInd) {               //Clear Set, previousInteger, boolean flag
+                if(continueInd) {                   //Clear Set, previousInteger, boolean flag
                     seqSet.clear();
                     prev = 0;
                     continueInd = false;
