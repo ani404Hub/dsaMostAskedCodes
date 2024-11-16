@@ -15,6 +15,10 @@ public class crudTree {
         topView(root);                                        //topView traversal of tree
         lca(root);                                            //lowest common ancestor of two nodes
         minTimeToBurn(root);                                  //Time to burn the whole tree from target node
+        isValidBST(root);                                     //Check If it is valid sorted BST
+        insertInBST(root);
+        deleteInBST(root);
+        floorValBST(root);
     }
 
     @Nullable
@@ -225,5 +229,94 @@ public class crudTree {
             }
         }
         return result;
+    }
+
+    static void isValidBST(Node root){
+        System.out.println("Checking Valid BST = " + checkValidBST(root, Integer.MAX_VALUE, Integer.MIN_VALUE));
+    }
+
+    static boolean checkValidBST(Node root, int max, int min){
+        if(root == null)                                    //Null node is also considered as valid BST
+            return true;
+        if(root.data < min || root.data > max)              //key must be in range of +infinity & -infinity, else not valid BST
+            return false;
+        return(checkValidBST(root.left,min, root.data-1)//Set Lower Bound for left child, range end in root value - 1
+                &&  checkValidBST(root.right, root.data+1, max));//Set upper Bound for right child, range start from root value + 1
+    }
+
+    static void insertInBST(Node root){
+        System.out.println("Enter node to insert = ");
+        int key = sc.nextInt();
+        insertNodeBST(root, key);
+        preOrder(root);
+    }
+
+    static Node insertNodeBST(Node root, int key){
+        if(root == null)
+            return new Node(key);
+        if(root.data > key)
+            root.left = insertNodeBST(root.left, key);
+        else
+            root.right = insertNodeBST(root.right, key);
+        return root;
+    }
+
+    static void deleteInBST(Node root){
+        System.out.println("Enter node to delete = ");
+        int target = sc.nextInt();
+        deleteNodeBST(root, target);
+        preOrder(root);
+    }
+
+    static Node deleteNodeBST(Node root, int target){
+        if(root == null)
+            return null;
+        if(target < root.data)                                  //If target < root value, search left child & update new root of sorted BST
+            root.left = deleteNodeBST(root.left, target);
+        else if (target > root.data)                            //If target > root value, search right child of sorted BST
+            root.right = deleteNodeBST(root.right, target);
+        else{
+                if(root.left == null)                           //If left child is null, search target in right child
+                    return root.right;
+                else if (root.right == null) {                  //If right child is null, search target in left child
+                    return root.left;
+                }
+                root.data = minValueNode(root.right);           //Take leftmost child of right node as it is the lowest value in sorted/preOrder BTree
+                root.right = deleteNodeBST(root.right, root.data);//Delete the target node & update new root node
+            }
+        return root;
+    }
+
+    static int minValueNode(Node root){
+        int minVal = root.data;                                 //
+        while(root.left != null){
+          minVal = root.left.data;
+          root = root.left;
+        }
+        return minVal;
+    }
+
+    static void floorValBST(Node root){
+        System.out.println("Enter Target node = ");
+        int target = sc.nextInt();
+        System.out.println("Nearest Floor value of Target node = " + floorVal(root, target));
+    }
+
+    static int floorVal(Node root, int target){
+        //int res = Integer.MIN_VALUE;                          //Initialise result with lowest -ve val to find ceil val
+        int res = Integer.MAX_VALUE;                            //Initialise result with Highest +ve val to find ceil val
+        while(root != null){
+            if(root.data == target)
+                return root.data;
+            if(root.data > target){
+                //res = root.data;                              //update result to nearest ceil val
+                root = root.left;                               //search in left child
+            }
+            else{
+                res = root.data;                                //update result to nearest floor val
+                root = root.right;                              //search in right child
+            }
+        }
+        return res;
     }
 }
