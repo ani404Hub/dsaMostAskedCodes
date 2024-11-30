@@ -1,7 +1,5 @@
 package org.example;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 
 public class crudTree {
@@ -21,7 +19,6 @@ public class crudTree {
         floorValBST(root);
     }
 
-    @Nullable
     static Node createBTree() {
         Node root;                                            //initialise root
         System.out.println("Enter root data : ");
