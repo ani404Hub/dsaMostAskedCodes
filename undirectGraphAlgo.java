@@ -11,9 +11,9 @@ public class undirectGraphAlgo {
         int componentCount = 0;
         int[] predecessor = new int[vertex + 1];
         int[] distance = new int[vertex + 1];
-        boolean[] visited = new boolean[vertex + 1];                                      //As vertex numbering starts from 1
-        for (int i = 0; i <= vertex; i++) {                                              //Oth index has no use
-            adjList.add(new ArrayList<>());                                             //Initialise & create new arraylist for each Array
+        boolean[] visited = new boolean[vertex + 1];                                             //As vertex numbering starts from 1
+        for (int i = 0; i <= vertex; i++) {                                                      //Oth index has no use
+            adjList.add(new ArrayList<>());                                                      //Initialise & create new arraylist for each Array
             predecessor[i] = -1;
             visited[i] = false;
             distance[i] = Integer.MAX_VALUE;
@@ -54,7 +54,7 @@ public class undirectGraphAlgo {
         System.out.println("Is cycle Present = " + isCyclic(vertex, adjList, visited));
     }
 
-    static void addEdge(ArrayList<ArrayList<Integer>> adjList, int src, int dest) {       //create to avoid repeated entry of same source & destination
+    static void addEdge(ArrayList<ArrayList<Integer>> adjList, int src, int dest) {               //create to avoid repeated entry of same source & destination
         adjList.get(src).add(dest);
         adjList.get(dest).add(src);
     }
@@ -134,5 +134,4 @@ public class undirectGraphAlgo {
         }
         return false;
     }
-
 }
