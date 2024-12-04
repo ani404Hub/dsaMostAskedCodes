@@ -9,13 +9,13 @@ public class undirectGraphAlgo {
         int vertex = 13;
         ArrayList<ArrayList<Integer>> adjList = new ArrayList<>();
         int componentCount = 0;
-        int[] predecessor = new int[vertex + 1];
+        int[] predecessor = new int[vertex + 1];                                                  //Initialise the predecessor array
         int[] distance = new int[vertex + 1];
-        boolean[] visited = new boolean[vertex + 1];                                             //As vertex numbering starts from 1
-        for (int i = 0; i <= vertex; i++) {                                                      //Oth index has no use
-            adjList.add(new ArrayList<>());                                                      //Initialise & create new arraylist for each Array
-            predecessor[i] = -1;
-            visited[i] = false;
+        boolean[] visited = new boolean[vertex + 1];                                              //As vertex numbering starts from 1
+        for (int i = 0; i <= vertex; i++) {                                                       //Oth index has no use
+            adjList.add(new ArrayList<>());                                                       //Initialise & create new arraylist for each Array
+            Arrays.fill(predecessor, -1);                                                     //Fill the predecessor array with -1
+            Arrays.fill(visited, false);                                                      //Fill the visited array with false
             distance[i] = Integer.MAX_VALUE;
         }
 
@@ -36,11 +36,11 @@ public class undirectGraphAlgo {
         for (int i = 1; i <= vertex; i++) {
             if (!visited[i] && !otherComponent) {
                 componentCount++;
-                bfs(adjList, 1, 6, predecessor, distance, visited);
+                bfs(adjList, 1, 6, predecessor, distance, visited);                       //Call BFS traversal for all connected component
             }
             if (!visited[i]) {
                 componentCount++;
-                bfsDisconnected(adjList, i, visited);
+                bfsDisconnected(adjList, i, visited);                                               //Call BFS traversal for disconnected components
             }
         }
 
@@ -48,7 +48,7 @@ public class undirectGraphAlgo {
 
         var res = new ArrayList<Integer>();
         Arrays.fill(visited, false);
-        System.out.println("DFS traversal List = " + dfs(1, adjList, visited, res));
+        System.out.println("DFS traversal List = " + dfs(1, adjList, visited, res));           //Call DFS traversal for connected components
 
         Arrays.fill(visited,false);
         System.out.println("Is cycle Present = " + isCyclic(vertex, adjList, visited));
@@ -60,23 +60,23 @@ public class undirectGraphAlgo {
     }
 
     static void bfs(ArrayList<ArrayList<Integer>> adjList, int src, int dest, int[] parent, int[] dist, boolean[] visited) {
-        ArrayList<Integer> bfsTraverseList = new ArrayList<>();
-        LinkedList<Integer> que = new LinkedList<>();
-        visited[src] = true;
+        ArrayList<Integer> bfsTraverseList = new ArrayList<>();                                   //Initialise an arraylist to store the element
+        LinkedList<Integer> que = new LinkedList<>();                                             //initialise a queue which will store the nodes
+        visited[src] = true;                                                                      //Mark source node as visited & edge distance as 0
         dist[src] = 0;
-        que.add(src);
+        que.add(src);                                                                             //Add source node in the queue
         while (!que.isEmpty()) {
-            int currentNode = que.remove();
-            bfsTraverseList.add(currentNode);
-            for (Integer neighbour : adjList.get(currentNode)) {
-                if (!visited[neighbour]) {
+            int currentNode = que.remove();                                                       //Fetch the current node from queue
+            bfsTraverseList.add(currentNode);                                                     //Add the current node in result list
+            for (Integer neighbour : adjList.get(currentNode)) {                                  //Fetch adjacent node to the current node
+                if (!visited[neighbour]) {                                                        //If adjacent node not visited then mark it as visited
                     visited[neighbour] = true;
-                    dist[neighbour] = dist[currentNode] + 1;
-                    parent[neighbour] = currentNode;
+                    dist[neighbour] = dist[currentNode] + 1;                                      //Increment the edge distance +1 from current node
+                    parent[neighbour] = currentNode;                                              //Mark adjacent node as parent of the current node to identify cyclicity
                     que.add(neighbour);
                     if (neighbour == dest) {
                         System.out.println("BFS traversal Path when source and destination found = " + bfsTraverseList);
-                        otherComponent = true;
+                        otherComponent = true;                                                    //Mark the end of traversal of connected component
                     }
                 }
             }
@@ -85,28 +85,28 @@ public class undirectGraphAlgo {
     }
 
     static void bfsDisconnected(ArrayList<ArrayList<Integer>> adjList, int src, boolean[] visited) {
-        ArrayList<Integer> bfsTraverseList = new ArrayList<>();
+        ArrayList<Integer> bfsDisconnectTraverseList = new ArrayList<>();
         Queue<Integer> que = new LinkedList<>();
         visited[src] = true;
         que.add(src);
         while (!que.isEmpty()) {
             int cur = que.poll();
-            bfsTraverseList.add(cur);
+            bfsDisconnectTraverseList.add(cur);
             for (Integer neighbour : adjList.get(cur)) {
                 if (!visited[neighbour]) {
                     visited[neighbour] = true;
-                    que.add(neighbour);
+                    que.add(neighbour);                                                          //Store all the disconnected component in queue to traverse next
                 }
             }
         }
-        System.out.println("Each graph traversal path = " + bfsTraverseList);
+        System.out.println("Each graph traversal path = " + bfsDisconnectTraverseList);
     }
 
     static ArrayList<Integer> dfs(int src, ArrayList<ArrayList<Integer>> adjList, boolean[] visited, ArrayList<Integer> ans) {
         visited[src] = true;
         ans.add(src);
         for (Integer neighbor : adjList.get(src)) {
-            if (!visited[neighbor]) {
+            if (!visited[neighbor]) {                                                           //If node is not visited, then call dfs recursively
                 dfs(neighbor, adjList, visited, ans);
             }
         }
@@ -114,9 +114,9 @@ public class undirectGraphAlgo {
     }
 
     static boolean isCyclic(int vertex, ArrayList<ArrayList<Integer>> adjList, boolean[] visited){
-        for(int i=0; i <= vertex; i++) {                                                        //Check all vertex if any cycle present in other disconnected graph
+        for(int i=0; i <= vertex; i++) {                                                       //Check all vertex if any cycle present in other disconnected graph
             if (!visited[i])
-                if (cycleDFS(i, adjList, visited, -1))                                   //Check if any connected graph has cycle then mark true
+                if (cycleDFS(i, adjList, visited, -1))                                  //Check if any connected graph has cycle then mark true
                     return true;
         }
         return false;
