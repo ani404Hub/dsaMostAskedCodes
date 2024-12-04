@@ -27,7 +27,7 @@ public class dynamicProgramming {
                 res = subRes + 1;
             }
         }
-        //dynMemory[totalCoinSum] = res;
+        dynMemory[totalCoinSum] = res;                                                             //Fill the dynamic memory array by taking the end result
         return  res;
     }
 }
