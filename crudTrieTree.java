@@ -13,6 +13,8 @@ public class crudTrieTree {
         List<String> searchList = Arrays.asList("coding", "javac");
         for(String searchStr : searchList)
             System.out.println(searchStr + " present = " + search(node, searchStr));                     //Search the selected word from list
+        int[] arr = new int[]{2,5,7,9,4,1};
+        System.out.println("Max Sum XOR Complement = " + maxXOR(arr, arr.length));
     }
     public static class TrieNode{                                                                        //create new static class called prefix tree
         TrieNode[] child;                                                                                //Create array as it can hold many no of children
@@ -44,5 +46,62 @@ public class crudTrieTree {
             currNode = currNode.child[curr - 'a'];                                                      //If the starting letter is present, check for the next letter
         }
         return currNode.isEndOfWord;
+    }
+
+    public static class TrieNodeBinary{                                                                 //Create new Trie data structure with 2 nodes
+        TrieNodeBinary zero, one;
+    }
+
+    public static void insert32Bit(TrieNodeBinary root, int n){
+        TrieNodeBinary cur = root;
+        for(int i = 31; i > 0; i--){
+            int bit = (n >> i) & 1;                                                                     //Create XOR operation and start fetching from MSB (from left)
+            if(bit == 0){                                                                               //Checks the current bit if zero
+                if(cur.zero == null)                                                                    //If current zero bit is empty create new Trie node to hold reference of current bit
+                    cur.zero = new TrieNodeBinary();
+                cur = cur.zero;                                                                         //Shift current pointer to the next bit
+            }
+            else {
+                if(cur.one == null)                                                                     //If current one bit is empty create new Trie node to hold reference of current bit
+                    cur.one = new TrieNodeBinary();
+                cur = cur.one;                                                                          //Shift current pointer to the next bit
+            }
+        }
+    }
+
+    public static int maxXORComplement(TrieNodeBinary root, int n){
+            TrieNodeBinary cur = root;
+            int maxComplement = 0;
+            for(int i = 31; i > 0; i-- ){
+                int bit = (n >> i) & 1;                                                                //Create XOR operation and start fetching from MSB (from left)
+                if(bit == 1){                                                                          //Checks the current bit of current element
+                    if(cur.zero != null){                                                              //Try to search the complement bit from inserted element list
+                        maxComplement = maxComplement + (1 << i);                                      //If complement element present then add in result
+                        cur = cur.zero;                                                                //Shift current pointer to the next bit
+                    }
+                    else
+                        cur = cur.one;                                                                 //If complement bit not present then shift to next bit
+                }
+                else{
+                    if(cur.one != null){                                                               //Complement of above "if" operation is performed
+                        maxComplement = maxComplement + (1 << i);
+                        cur = cur.one;
+                    }
+                    else
+                        cur = cur.zero;
+                }
+            }
+            return maxComplement;                                                                      //Return the best complement integer from inserted list of the current element
+    }
+
+    public static int maxXOR(int[] arr, int n){
+            TrieNodeBinary root = new TrieNodeBinary();
+            int res = 0;
+            for(int i = 0; i < n ; i++)
+                insert32Bit(root, arr[i]);                                                            //Insertion of list of integers
+            System.out.println("Integer Insertion Successful");
+            for(int i = 1; i < n; i++)
+                res = Math.max(res, maxXORComplement(root, arr[i]));                                  //Compare and select max sum result of an integer and its complement from the list
+            return res;
     }
 }
