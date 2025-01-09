@@ -14,8 +14,8 @@ public class oddEvenMultiThread {
         new Thread(r1, "Odd").start();
         new Thread(r1, "Even").start();
 
-        //Define fixed thread pool else create fork join pool as completableFuture
-        try(ExecutorService es = Executors.newFixedThreadPool(2)){
+        //implement using java 8 completable future
+        try(ExecutorService es = Executors.newFixedThreadPool(2)){                      //Define fixed thread pool else create fork join pool by default
             IntStream.rangeClosed(1,10).forEach(n -> {
                 CompletableFuture<Integer> odd = CompletableFuture.completedFuture(n).thenApplyAsync(x -> {
                     if(x%2 != 0)
@@ -30,7 +30,7 @@ public class oddEvenMultiThread {
                 }, es);
                 even.join();
                 });
-            es.shutdown(); //not required as using try with resources
+            es.shutdown();                                                                      //not required as using try with resources
         }
     }
 }
@@ -39,7 +39,7 @@ class oddEvenPrint implements Runnable{
     final Object object;
     static int count = 0;
 
-    public oddEvenPrint(Object object) {
+    public oddEvenPrint(Object object) {                                                       //Add Parametrized constructor
         this.object = object;
     }
 

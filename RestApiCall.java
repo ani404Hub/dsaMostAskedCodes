@@ -14,12 +14,12 @@ public class RestApiCall {
         String urlRP = "https://jsonplaceholder.typicode.com/posts?userId=" + id; //Request Param input
         String urlPP =  "https://jsonplaceholder.typicode.com/posts/" +id; //Path Param input
 
-        HttpClient client = HttpClient.newHttpClient();
+        //HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(urlRP)).GET().build();
         //HttpRequest request1 = HttpRequest.newBuilder().uri(URI.create(urlRP)).headers("username", "Param1","Param2").POST(new bodyPublisher("abc")).build();
-        //HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //HttpResponse convert to string
-        String arr = response.body();
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        //HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString()); //HttpResponse convert to string
+        //String arr = response.body();
 
             if(response.statusCode() == 200){
                 System.out.println("Response Body" + response.body());

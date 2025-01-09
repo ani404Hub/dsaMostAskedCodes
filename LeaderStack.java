@@ -18,7 +18,7 @@ public class LeaderStack {
                 list.add(-1);                                   // if no highest elem before make stack empty & print -1,
             }
             else{
-                list.add(dq.peek());
+                list.add(dq.peek());                            // Add top element in the list
             }
             dq.push(num[i]);
         }
